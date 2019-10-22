@@ -18,7 +18,8 @@ void print_mem(char *chunk_name, t_memory_chunk *chunk)
 	print_address_hex(chunk);
 	ft_putchar('\n');
 	while (chunk != NULL) {
-		if (chunk->free == false) {
+		if (chunk->free == false)
+		{
 			print_address_hex(chunk->free_space);
 			ft_putstr(" - ");
 			print_address_hex(chunk->free_space + chunk->allocated_size);
@@ -29,7 +30,6 @@ void print_mem(char *chunk_name, t_memory_chunk *chunk)
 		}
 		chunk = chunk->next;
 	}
-	ft_printf("Number of allocations : %zd\n", count);
 }
 
 void show_alloc_mem(void) {

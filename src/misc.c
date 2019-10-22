@@ -3,32 +3,45 @@
 #include <stdio.h>
 #include <stdint.h>
 
-char hex_digit(int v) {
+/*
+ * Return digit in hexadecimal.
+ */
+char hex_digit(int v)
+{
 	if (v >= 0 && v < 10)
 		return '0' + v;
 	else
 		return 'A' + v - 10;
 }
 
-void print_address_hex(void* p0) {
+/*
+ * Print address in hexadecimal.
+ */
+void print_address_hex(void* address)
+{
 	int i;
-	uintptr_t p = (uintptr_t)p0;
+	uintptr_t p;
 	char hex_char;
-	bool leading_zero = true;
+	bool leading_zero;
 
-	if (p0 == NULL)
+	p = (uintptr_t)address;
+	leading_zero = true;
+	if (address == NULL)
 	{
 		ft_putstr("0x0");
 	}
 	else
 	{
+		i = (sizeof(p) << 3) - 4;
 		ft_putstr("0x");
-		for(i = (sizeof(p) << 3) - 4; i>=0; i -= 4) {
+		while (i >= 0)
+		{
 			hex_char = hex_digit((p >> i) & 0xf);
 			if (hex_char != '0' && leading_zero == true)
 				leading_zero = false;
 			if (leading_zero == false)
 				ft_putchar(hex_char);
+			i -= 4;
 		}
 	}
 }
@@ -38,5 +51,8 @@ void print_address_hex(void* p0) {
  */
 size_t	align_to_page_size(size_t size)
 {
-	return (((size / memory->system_page_size) * memory->system_page_size) + memory->system_page_size);
+	size_t system_page_size;
+
+	system_page_size = getpagesize();
+	return (((size / system_page_size) * system_page_size) + system_page_size);
 }

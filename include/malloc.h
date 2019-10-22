@@ -35,6 +35,8 @@ typedef struct	s_memory
 	size_t			tiny_chunk_size;
 	size_t			medium_chunk_size;
 	size_t			total_allocated_size;
+	size_t			projection_size;
+	size_t			allocation_count;
 }				t_memory;
 
 void	*malloc(size_t size);

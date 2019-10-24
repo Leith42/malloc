@@ -36,17 +36,18 @@ typedef struct	s_memory
 	size_t			medium_chunk_size;
 	size_t			total_allocated_size;
 	size_t			projection_size;
-	size_t			allocation_count;
 }				t_memory;
 
 void	*malloc(size_t size);
 void	free(void *ptr);
+void	*realloc(void *ptr, size_t size);
 void	init_memory(void);
 void	print_memory(const void *addr, size_t size);
 void	*allocate_memory(size_t size);
 void	show_alloc_mem(void);
 void	print_address_hex(void* p0);
-
+void 	*allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t allocated_size);
+void	*allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size);
 // Miscellaneous
 size_t	align_to_page_size(size_t size);
 

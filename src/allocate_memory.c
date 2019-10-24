@@ -7,7 +7,7 @@ static t_memory_chunk *get_last_chunk(t_memory_chunk *chunk) {
 	return chunk;
 }
 
-static void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
+void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 {
 	t_memory_chunk *chunk_crawler;
 	size_t rounded_size;
@@ -26,7 +26,6 @@ static void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 		(*chunk)->allocation_type = DYNAMIC_ALLOCATION;
 		(*chunk)->free = false;
 		memory->total_allocated_size += size;
-		memory->allocation_count++;
 		return (*chunk)->free_space;
 	}
 	else
@@ -43,22 +42,25 @@ static void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 		chunk_crawler->next->allocation_type = DYNAMIC_ALLOCATION;
 		chunk_crawler->next->free = false;
 		memory->total_allocated_size += size;
-		memory->allocation_count++;
 		return chunk_crawler->next->free_space;
 	}
 }
 
-static void *allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t allocated_size) {
+void *allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t allocated_size) {
 	size_t count;
 
 	count = 0;
-	while (count < CHUNK_MAX) {
-		if (chunk->free == true) {
+	while (count < CHUNK_MAX)
+	{
+		if (chunk->free == true)
+		{
 			chunk->free = false;
 			chunk->allocated_size = allocated_size;
 			memory->total_allocated_size += allocated_size;
 			return chunk->free_space;
-		} else if (chunk->next == NULL && count < (CHUNK_MAX - 1)) {
+		}
+		else if (chunk->next == NULL && count < (CHUNK_MAX - 1))
+		{
 			chunk->next = (t_memory_chunk * )(chunk->free_space + chunk_size);
 			chunk->next->prev = chunk;
 			chunk->next->next = NULL;

@@ -58,6 +58,5 @@ void init_memory(void) {
 	memory->tiny_chunk_size = tiny_chunk_size;
 	memory->medium_chunk_size = medium_chunk_size;
 	memory->projection_size = projection_size;
-	memory->allocation_count = 0;
 	init_static_chunks();
 }

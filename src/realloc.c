@@ -14,7 +14,6 @@ static void		*realloc_dynamic_allocation(t_memory_chunk *chunk, size_t size)
 {
 	void *ptr;
 
-	memory->total_allocated_size += (size - chunk->allocated_size);
 	if (size <= memory->tiny_chunk_size)
 	{
 		if ((ptr = allocate_static_chunk(memory->tiny_chunk, memory->tiny_chunk_size, size)) == NULL)
@@ -79,7 +78,7 @@ void		*realloc(void *ptr, size_t size)
 {
 	t_memory_chunk *chunk;
 
-	if (ptr == NULL)
+	if (is_allocated(ptr) == false)
 		return NULL;
 	chunk = (t_memory_chunk * )((char *) ptr - sizeof(t_memory_chunk));
 

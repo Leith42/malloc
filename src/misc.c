@@ -4,6 +4,39 @@
 #include <stdint.h>
 
 /*
+ * Make sure the pointer is an allocated chunk.
+ */
+bool		is_allocated(void *ptr)
+{
+	t_memory_chunk	*crawler;
+
+	if (ptr == NULL)
+		return false;
+	crawler = memory->tiny_chunk;
+	while (crawler != NULL)
+	{
+		if (crawler->free_space == ptr)
+			return true;
+		crawler = crawler->next;
+	}
+	crawler = memory->medium_chunk;
+	while (crawler != NULL)
+	{
+		if (crawler->free_space == ptr)
+			return true;
+		crawler = crawler->next;
+	}
+	crawler = memory->dynamic_chunk;
+	while (crawler != NULL)
+	{
+		if (crawler->free_space == ptr)
+			return true;
+		crawler = crawler->next;
+	}
+	return false;
+}
+
+/*
  * Return digit in hexadecimal.
  */
 char hex_digit(int v)
@@ -27,9 +60,7 @@ void print_address_hex(void* address)
 	p = (uintptr_t)address;
 	leading_zero = true;
 	if (address == NULL)
-	{
 		ft_putstr("0x0");
-	}
 	else
 	{
 		i = (sizeof(p) << 3) - 4;

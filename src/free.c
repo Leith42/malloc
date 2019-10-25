@@ -39,7 +39,7 @@ static void unmap_static_chunk(t_memory_chunk *chunk) {
 void free(void *ptr) {
 	t_memory_chunk *chunk;
 
-	if (ptr == NULL)
+	if (is_allocated(ptr) == false)
 		return;
 	chunk = (t_memory_chunk * )((char *) ptr - sizeof(t_memory_chunk));
 

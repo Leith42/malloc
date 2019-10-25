@@ -48,7 +48,9 @@ void	show_alloc_mem(void);
 void	print_address_hex(void* p0);
 void 	*allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t allocated_size);
 void	*allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size);
+
 // Miscellaneous
+bool	is_allocated(void *ptr);
 size_t	align_to_page_size(size_t size);
 
 extern t_memory	*memory;

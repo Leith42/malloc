@@ -12,21 +12,21 @@ bool		is_allocated(void *ptr)
 
 	if (ptr == NULL)
 		return false;
-	crawler = memory->tiny_chunk;
+	crawler = g_memory->tiny_chunk;
 	while (crawler != NULL)
 	{
 		if (crawler->free_space == ptr)
 			return true;
 		crawler = crawler->next;
 	}
-	crawler = memory->medium_chunk;
+	crawler = g_memory->medium_chunk;
 	while (crawler != NULL)
 	{
 		if (crawler->free_space == ptr)
 			return true;
 		crawler = crawler->next;
 	}
-	crawler = memory->dynamic_chunk;
+	crawler = g_memory->dynamic_chunk;
 	while (crawler != NULL)
 	{
 		if (crawler->free_space == ptr)

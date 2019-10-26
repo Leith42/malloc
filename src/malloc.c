@@ -8,10 +8,11 @@ void *malloc(size_t size) {
 
 	if (size == 0)
 		return (NULL);
-	init_memory();
-	allocation = allocate_memory(size);
 
-	if (memory == MAP_FAILED)
-		return (NULL);
+	pthread_mutex_lock(&g_mutex);
+	if (init_memory() != -1)
+		allocation = allocate_memory(size);
+	pthread_mutex_unlock(&g_mutex);
+
 	return allocation;
 }

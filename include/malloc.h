@@ -7,6 +7,7 @@
 
 # include <stdio.h>
 # include <stdbool.h>
+# include <pthread.h>
 
 typedef	enum
 {
@@ -41,7 +42,7 @@ typedef struct	s_memory
 void	*malloc(size_t size);
 void	free(void *ptr);
 void	*realloc(void *ptr, size_t size);
-void	init_memory(void);
+int		init_memory(void);
 void	print_memory(const void *addr, size_t size);
 void	*allocate_memory(size_t size);
 void	show_alloc_mem(void);
@@ -53,6 +54,7 @@ void	*allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size);
 bool	is_allocated(void *ptr);
 size_t	align_to_page_size(size_t size);
 
-extern t_memory	*memory;
+extern t_memory	*g_memory;
+extern pthread_mutex_t g_mutex;
 
 #endif //MALLOC_H

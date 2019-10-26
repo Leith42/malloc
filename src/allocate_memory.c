@@ -17,7 +17,7 @@ void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 	{
 		*chunk = mmap(NULL, rounded_size, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 		if (*chunk == MAP_FAILED)
-			return NULL; //todo: error
+			return NULL;
 		(*chunk)->prev = NULL;
 		(*chunk)->next = NULL;
 		(*chunk)->free_space = (char *) *chunk + sizeof(t_memory_chunk);
@@ -25,7 +25,7 @@ void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 		(*chunk)->projection_size = rounded_size;
 		(*chunk)->allocation_type = DYNAMIC_ALLOCATION;
 		(*chunk)->free = false;
-		memory->total_allocated_size += size;
+		g_memory->total_allocated_size += size;
 		return (*chunk)->free_space;
 	}
 	else
@@ -33,7 +33,7 @@ void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 		chunk_crawler = get_last_chunk(*chunk);
 		chunk_crawler->next = mmap(NULL, rounded_size, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 		if (chunk_crawler->next == MAP_FAILED)
-			return NULL; //todo: error
+			return NULL;
 		chunk_crawler->next->prev = chunk_crawler;
 		chunk_crawler->next->next = NULL;
 		chunk_crawler->next->free_space = (char *)chunk_crawler->next + sizeof(t_memory_chunk);
@@ -41,7 +41,7 @@ void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 		chunk_crawler->next->projection_size = rounded_size;
 		chunk_crawler->next->allocation_type = DYNAMIC_ALLOCATION;
 		chunk_crawler->next->free = false;
-		memory->total_allocated_size += size;
+		g_memory->total_allocated_size += size;
 		return chunk_crawler->next->free_space;
 	}
 }
@@ -56,7 +56,7 @@ void *allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t all
 		{
 			chunk->free = false;
 			chunk->allocated_size = allocated_size;
-			memory->total_allocated_size += allocated_size;
+			g_memory->total_allocated_size += allocated_size;
 			return chunk->free_space;
 		}
 		else if (chunk->next == NULL && count < (CHUNK_MAX - 1))
@@ -69,7 +69,7 @@ void *allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t all
 			chunk->next->allocated_size = allocated_size;
 			chunk->next->projection_size = sizeof(t_memory_chunk) + chunk_size;
 			chunk->next->free_space = (char *)chunk->next + sizeof(t_memory_chunk);
-			memory->total_allocated_size += allocated_size;
+			g_memory->total_allocated_size += allocated_size;
 			return chunk->next->free_space;
 		}
 		chunk = chunk->next;
@@ -84,12 +84,12 @@ void *allocate_memory(size_t allocated_size) {
 
 	free_chunk = NULL;
 
-	if (allocated_size <= memory->tiny_chunk_size)
-		free_chunk = allocate_static_chunk(memory->tiny_chunk, memory->tiny_chunk_size, allocated_size);
-	else if (allocated_size <= memory->medium_chunk_size)
-		free_chunk = allocate_static_chunk(memory->medium_chunk, memory->medium_chunk_size, allocated_size);
+	if (allocated_size <= g_memory->tiny_chunk_size)
+		free_chunk = allocate_static_chunk(g_memory->tiny_chunk, g_memory->tiny_chunk_size, allocated_size);
+	else if (allocated_size <= g_memory->medium_chunk_size)
+		free_chunk = allocate_static_chunk(g_memory->medium_chunk, g_memory->medium_chunk_size, allocated_size);
 	if (free_chunk == NULL)
-		free_chunk = allocate_dynamic_chunk(&memory->dynamic_chunk, allocated_size);
+		free_chunk = allocate_dynamic_chunk(&g_memory->dynamic_chunk, allocated_size);
 
 	return free_chunk;
 }

@@ -4,7 +4,7 @@
 void print_total_size(void)
 {
 	ft_putstr("Total : ");
-	ft_putnbr(memory->total_allocated_size);
+	ft_putnbr(g_memory->total_allocated_size);
 	ft_putstr(" bytes\n");
 }
 
@@ -33,9 +33,13 @@ void print_mem(char *chunk_name, t_memory_chunk *chunk)
 }
 
 void show_alloc_mem(void) {
-	init_memory();
-	print_mem("TINY", memory->tiny_chunk);
-	print_mem("SMALL", memory->medium_chunk);
-	print_mem("DYNAMIC", memory->dynamic_chunk);
-	print_total_size();
+	pthread_mutex_lock(&g_mutex);
+	if (init_memory() != -1)
+	{
+		print_mem("TINY", g_memory->tiny_chunk);
+		print_mem("SMALL", g_memory->medium_chunk);
+		print_mem("LARGE", g_memory->dynamic_chunk);
+		print_total_size();
+	}
+	pthread_mutex_unlock(&g_mutex);
 }

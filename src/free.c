@@ -4,9 +4,9 @@
 
 static void update_first_node(t_memory_chunk *prev, t_memory_chunk *next, t_memory_chunk *chunk)
 {
-	if (memory->dynamic_chunk == chunk)
+	if (g_memory->dynamic_chunk == chunk)
 	{
-		memory->dynamic_chunk = next;
+		g_memory->dynamic_chunk = next;
 	}
 	if (prev != NULL)
 	{
@@ -25,13 +25,13 @@ static void unmap_dynamic_chunk(t_memory_chunk *chunk) {
 	next = chunk->next;
 	prev = chunk->prev;
 
-	memory->total_allocated_size -= chunk->allocated_size;
+	g_memory->total_allocated_size -= chunk->allocated_size;
 	munmap(chunk, chunk->projection_size);
 	update_first_node(prev, next, chunk);
 }
 
 static void unmap_static_chunk(t_memory_chunk *chunk) {
-	memory->total_allocated_size -= chunk->allocated_size;
+	g_memory->total_allocated_size -= chunk->allocated_size;
 	chunk->free = true;
 	chunk->allocated_size = 0;
 }
@@ -39,6 +39,7 @@ static void unmap_static_chunk(t_memory_chunk *chunk) {
 void free(void *ptr) {
 	t_memory_chunk *chunk;
 
+	pthread_mutex_lock(&g_mutex);
 	if (is_allocated(ptr) == false)
 		return;
 	chunk = (t_memory_chunk * )((char *) ptr - sizeof(t_memory_chunk));
@@ -47,4 +48,5 @@ void free(void *ptr) {
 		unmap_static_chunk(chunk);
 	else
 		unmap_dynamic_chunk(chunk);
+	pthread_mutex_unlock(&g_mutex);
 }

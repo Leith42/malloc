@@ -1,14 +1,14 @@
 #include "malloc.h"
 #include "libft.h"
 
-void print_total_size(void)
+static void print_total_size(void)
 {
 	ft_putstr("Total : ");
 	ft_putnbr(g_memory->total_allocated_size);
 	ft_putstr(" bytes\n");
 }
 
-void print_mem(char *chunk_name, t_memory_chunk *chunk)
+static void print_mem(char *chunk_name, t_memory_chunk *chunk)
 {
 	size_t	count;
 
@@ -32,6 +32,9 @@ void print_mem(char *chunk_name, t_memory_chunk *chunk)
 	}
 }
 
+/*
+ * Prints state of the allocated memory chunks.
+ */
 void show_alloc_mem(void) {
 	pthread_mutex_lock(&g_mutex);
 	if (init_memory() != -1)

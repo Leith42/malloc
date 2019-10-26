@@ -1,6 +1,9 @@
 #include "malloc.h"
 #include "libft.h"
 
+/*
+ * Free and copy memory from one memory space to another.
+ */
 static void 	chunk_cpy(t_memory_chunk *chunk, void *dest, size_t size)
 {
 	if (chunk != NULL)
@@ -10,6 +13,9 @@ static void 	chunk_cpy(t_memory_chunk *chunk, void *dest, size_t size)
 	}
 }
 
+/*
+ * Return a reallocated memory space.
+ */
 static void		*realloc_dynamic_allocation(t_memory_chunk *chunk, size_t size)
 {
 	void *ptr;
@@ -33,6 +39,9 @@ static void		*realloc_dynamic_allocation(t_memory_chunk *chunk, size_t size)
 	return (ptr);
 }
 
+/*
+ * Return a reallocated memory space.
+ */
 static void		*realloc_static_allocation(t_memory_chunk *chunk, size_t size)
 {
 	void *ptr;
@@ -74,6 +83,9 @@ static void		*realloc_static_allocation(t_memory_chunk *chunk, size_t size)
 	return ptr;
 }
 
+/*
+ * My own implementation of realloc using mmap/munmap.
+ */
 void		*realloc(void *ptr, size_t size)
 {
 	t_memory_chunk *chunk;

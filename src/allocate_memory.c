@@ -1,12 +1,19 @@
 #include "malloc.h"
 #include <sys/mman.h>
 
-static t_memory_chunk *get_last_chunk(t_memory_chunk *chunk) {
+/*
+ * Return the last node of chunk.
+ */
+static t_memory_chunk *get_last_chunk(t_memory_chunk *chunk)
+{
 	while (chunk->next != NULL)
 		chunk = chunk->next;
 	return chunk;
 }
 
+/*
+ * Return an allocated memory space using mmap.
+ */
 void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 {
 	t_memory_chunk *chunk_crawler;
@@ -45,7 +52,9 @@ void *allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size)
 		return chunk_crawler->next->free_space;
 	}
 }
-
+/*
+ * Return a pre-allocated memory space.
+ */
 void *allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t allocated_size) {
 	size_t count;
 
@@ -79,17 +88,21 @@ void *allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t all
 	return NULL;
 }
 
-void *allocate_memory(size_t allocated_size) {
-	void *free_chunk;
+/*
+ * Return an allocated memory space according to allocated_size.
+ */
+void *allocate_memory(size_t allocated_size)
+{
+	void *ptr;
 
-	free_chunk = NULL;
+	ptr = NULL;
 
 	if (allocated_size <= g_memory->tiny_chunk_size)
-		free_chunk = allocate_static_chunk(g_memory->tiny_chunk, g_memory->tiny_chunk_size, allocated_size);
+		ptr = allocate_static_chunk(g_memory->tiny_chunk, g_memory->tiny_chunk_size, allocated_size);
 	else if (allocated_size <= g_memory->medium_chunk_size)
-		free_chunk = allocate_static_chunk(g_memory->medium_chunk, g_memory->medium_chunk_size, allocated_size);
-	if (free_chunk == NULL)
-		free_chunk = allocate_dynamic_chunk(&g_memory->dynamic_chunk, allocated_size);
+		ptr = allocate_static_chunk(g_memory->medium_chunk, g_memory->medium_chunk_size, allocated_size);
+	if (ptr == NULL)
+		ptr = allocate_dynamic_chunk(&g_memory->dynamic_chunk, allocated_size);
 
-	return free_chunk;
+	return ptr;
 }

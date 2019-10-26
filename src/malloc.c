@@ -3,6 +3,9 @@
 #include <errno.h>
 #include <sys/mman.h>
 
+/*
+ * My own implementation of malloc using mmap/munmap.
+ */
 void *malloc(size_t size) {
 	void *allocation;
 

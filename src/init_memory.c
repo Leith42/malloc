@@ -41,7 +41,7 @@ static void init_static_chunks(void) {
 /*
  * Initializes the main structure that will contain the chunks of memory and useful data.
  */
-init	init_memory(void) {
+int	init_memory(void) {
 	size_t system_page_size;
 	size_t tiny_chunk_size;
 	size_t medium_chunk_size;

@@ -15,6 +15,8 @@ void *malloc(size_t size) {
 	pthread_mutex_lock(&g_mutex);
 	if (init_memory() != -1)
 		allocation = allocate_memory(size);
+	else
+		allocation = NULL;
 	pthread_mutex_unlock(&g_mutex);
 
 	return allocation;

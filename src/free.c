@@ -15,7 +15,7 @@ static void update_first_node(t_memory_chunk *prev, t_memory_chunk *next, t_memo
 /*
  * Free a dynamic chunk.
  */
-static void unmap_dynamic_chunk(t_memory_chunk *chunk)
+void 		unmap_dynamic_chunk(t_memory_chunk *chunk)
 {
 	t_memory_chunk *next;
 	t_memory_chunk *prev;
@@ -31,7 +31,7 @@ static void unmap_dynamic_chunk(t_memory_chunk *chunk)
 /*
  * Free a static chunk.
  */
-static void unmap_static_chunk(t_memory_chunk *chunk)
+void		unmap_static_chunk(t_memory_chunk *chunk)
 {
 	g_memory->total_allocated_size -= chunk->allocated_size;
 	chunk->free = true;
@@ -41,18 +41,19 @@ static void unmap_static_chunk(t_memory_chunk *chunk)
 /*
  * My own implementation of free using mmap/munmap.
  */
-void free(void *ptr)
+void		free(void *ptr)
 {
 	t_memory_chunk *chunk;
 
 	pthread_mutex_lock(&g_mutex);
-	if (is_allocated(ptr) == false)
-		return;
-	chunk = (t_memory_chunk * )((char *) ptr - sizeof(t_memory_chunk));
+	if (is_allocated(ptr) == true)
+	{
+		chunk = (t_memory_chunk * )((char *) ptr - sizeof(t_memory_chunk));
 
-	if (chunk->allocation_type == STATIC_ALLOCATION)
-		unmap_static_chunk(chunk);
-	else
-		unmap_dynamic_chunk(chunk);
+		if (chunk->allocation_type == STATIC_ALLOCATION)
+			unmap_static_chunk(chunk);
+		else
+			unmap_dynamic_chunk(chunk);
+	}
 	pthread_mutex_unlock(&g_mutex);
 }

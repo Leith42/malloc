@@ -9,7 +9,10 @@ static void 	chunk_cpy(t_memory_chunk *chunk, void *dest, size_t size)
 	if (chunk != NULL)
 	{
 		ft_memcpy(dest, chunk->free_space, chunk->allocated_size > size ? size : chunk->allocated_size);
-		free(chunk->free_space);
+		if (chunk->allocation_type == STATIC_ALLOCATION)
+			unmap_static_chunk(chunk);
+		else
+			unmap_dynamic_chunk(chunk);
 	}
 }
 

@@ -6,7 +6,6 @@
 
 .idea
 build
-test
 
 # User-specific stuff
 .idea/**/workspace.xml

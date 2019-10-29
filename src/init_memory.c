@@ -17,7 +17,7 @@ t_memory *g_memory = NULL;
  * Initializes the first memory chunk of each type,
  * other nodes will be dynamically initialized when needed.
  */
-static void init_static_chunks(void) {
+void init_tiny_chunk(void) {
 	g_memory->tiny_chunk = (t_memory_chunk * )(g_memory + 1);
 	g_memory->tiny_chunk->prev = NULL;
 	g_memory->tiny_chunk->next = NULL;
@@ -26,8 +26,12 @@ static void init_static_chunks(void) {
 	g_memory->tiny_chunk->projection_size = sizeof(t_memory_chunk) + g_memory->tiny_chunk_size;
 	g_memory->tiny_chunk->allocation_type = STATIC_ALLOCATION;
 	g_memory->tiny_chunk->free = true;
-	g_memory->medium_chunk = (t_memory_chunk * )(
-			(char *) g_memory->tiny_chunk + ((g_memory->tiny_chunk_size + sizeof(t_memory_chunk)) * CHUNK_MAX));
+}
+
+void init_medium_chunk(void)
+{
+	g_memory->medium_chunk = (t_memory_chunk * )
+			((char *) (g_memory + 1) + ((g_memory->tiny_chunk_size + sizeof(t_memory_chunk)) * CHUNK_MAX));
 	g_memory->medium_chunk->prev = NULL;
 	g_memory->medium_chunk->next = NULL;
 	g_memory->medium_chunk->free_space = (char *) g_memory->medium_chunk + sizeof(t_memory_chunk);
@@ -35,8 +39,8 @@ static void init_static_chunks(void) {
 	g_memory->medium_chunk->projection_size = sizeof(t_memory_chunk) + g_memory->medium_chunk_size;
 	g_memory->medium_chunk->allocation_type = STATIC_ALLOCATION;
 	g_memory->medium_chunk->free = true;
-	g_memory->dynamic_chunk = NULL;
 }
+
 
 /*
  * Initializes the main structure that will contain the chunks of memory and useful data.
@@ -63,6 +67,9 @@ int	init_memory(void) {
 	g_memory->tiny_chunk_size = tiny_chunk_size;
 	g_memory->medium_chunk_size = medium_chunk_size;
 	g_memory->projection_size = projection_size;
-	init_static_chunks();
+	g_memory->tiny_chunk = NULL;
+	g_memory->medium_chunk = NULL;
+	g_memory->dynamic_chunk = NULL;
+
 	return 0;
 }

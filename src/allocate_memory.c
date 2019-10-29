@@ -98,9 +98,17 @@ void *allocate_memory(size_t allocated_size)
 	ptr = NULL;
 
 	if (allocated_size <= g_memory->tiny_chunk_size)
+	{
+		if (g_memory->tiny_chunk == NULL)
+			init_tiny_chunk();
 		ptr = allocate_static_chunk(g_memory->tiny_chunk, g_memory->tiny_chunk_size, allocated_size);
+	}
 	else if (allocated_size <= g_memory->medium_chunk_size)
+	{
+		if (g_memory->medium_chunk == NULL)
+			init_medium_chunk();
 		ptr = allocate_static_chunk(g_memory->medium_chunk, g_memory->medium_chunk_size, allocated_size);
+	}
 	if (ptr == NULL)
 		ptr = allocate_dynamic_chunk(&g_memory->dynamic_chunk, allocated_size);
 

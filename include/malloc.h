@@ -51,6 +51,8 @@ void 	*allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t al
 void	*allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size);
 void	unmap_static_chunk(t_memory_chunk *chunk);
 void	unmap_dynamic_chunk(t_memory_chunk *chunk);
+void	init_tiny_chunk(void);
+void	init_medium_chunk(void);
 
 // Miscellaneous
 bool	is_allocated(void *ptr);

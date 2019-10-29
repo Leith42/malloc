@@ -1,4 +1,5 @@
-#!/usr/bin/zsh
-export LD_PRELOAD="/home/leith/CLionProjects/malloc/libmalloc.so"
-./test/test
-unset LD_PRELOAD
+#!/bin/zsh
+export DYLD_LIBRARY_PATH=.
+export DYLD_INSERT_LIBRARIES="libft_malloc.so"
+export DYLD_FORCE_FLAT_NAMESPACE=1
+$@

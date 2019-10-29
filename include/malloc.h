@@ -49,6 +49,8 @@ void	show_alloc_mem(void);
 void	print_address_hex(void* p0);
 void 	*allocate_static_chunk(t_memory_chunk *chunk, size_t chunk_size, size_t allocated_size);
 void	*allocate_dynamic_chunk(t_memory_chunk **chunk, size_t size);
+void	unmap_static_chunk(t_memory_chunk *chunk);
+void	unmap_dynamic_chunk(t_memory_chunk *chunk);
 
 // Miscellaneous
 bool	is_allocated(void *ptr);
